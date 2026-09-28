@@ -34,7 +34,7 @@ public class Event {
     public void setName(String name){this.name = name;}
     public void setDate(String date){this.date = date;}
     
-    public void addAttendees(Attendee attendee){
+    public void addAttendee(Attendee attendee){
         attendees.add(attendee);
     }
     @Override
