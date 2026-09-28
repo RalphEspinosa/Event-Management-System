@@ -4,11 +4,10 @@
  */
 package eventmanagement.model;
 
-/**
- *
- * @author reirii
- */
 //testing lang buseng
+
+import eventmanagement.db.DBConnection;
+import java.sql.Connection;
 public class Main {
     public static void main(String[] args) {
        
@@ -26,6 +25,12 @@ public class Main {
         for(Attendee a: sample.getAttendees()){
             System.out.println(" - " + a);
         }
-    }
+        
+        try(Connection conn = DBConnection.getConnection()){
+            System.out.println("Database connected succesfully");
+        }catch(Exception e){
+                 System.out.println("Connection failed");
+                 }
     
+    }  
 }
