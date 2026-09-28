@@ -14,7 +14,7 @@ public class Event {
     private int eventId;
     private String name;
     private String date;
-    //private LinkedList<Attendee> attendees;
+    private LinkedList<Attendee> attendees;
     
     
     //Event constructor ☜(ﾟヮﾟ☜)
@@ -22,19 +22,19 @@ public class Event {
         this.eventId = eventId;
         this.name = name;
         this.date = date;
-        //this.attendees = new LinkedList<>();
+        this.attendees = new LinkedList<>();
     }
     
     //Setters and getters ᕦ(ò_óˇ)ᕤ
     public int getEventId(){return eventId;}
     public String getName(){return name;}
     public String getDate(){return date;}
-    //public LinkedList <Attendee> getAttendees() {return attendees;}
+    public LinkedList <Attendee> getAttendees() {return attendees;}
 
     public void setName(String name){this.name = name;}
     public void setDate(String date){this.date = date;}
     
-   /* public void addAttendees(Attendee attendee){
+    public void addAttendees(Attendee attendee){
         attendees.add(attendee);
     }
     @Override
@@ -42,10 +42,5 @@ public class Event {
         return "Event #" + eventId + ": " + name + " on " + date + 
            " (" + attendees.size() + " attendees)";  
     }
-   */
-
-    
-    
-    
-
+   
 }
