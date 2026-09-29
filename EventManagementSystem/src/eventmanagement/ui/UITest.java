@@ -9,5 +9,8 @@ package eventmanagement.ui;
  * @author ACER
  */
 public class UITest {
-    
+    public static void main(String[]args){
+        UI sample =new UI();
+        sample.setVisible(true);
+    }
 }
