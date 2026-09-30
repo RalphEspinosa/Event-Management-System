@@ -4,22 +4,29 @@
  */
 package eventmanagement.ui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author reirii
  */
-public class UI extends JFrame implements ActionListener{
+public class UI extends JFrame {
     
     // Declaring Components
+     private DefaultTableModel model;
      private JTabbedPane tabbedPane;
      private JPanel eventPanel, attendeePanel, reportPanel;
      private JLabel lblEventName, lblCategory, lblDate;
      private JTextField txtEventName, txtDate, txtCategory;
      private JButton btnAdd, btnUpdate, btnDelete;
+     private JTable eventTable;
+     private JScrollPane scroll;
+     
+     // Declaring Table Columns
+      Object[][] data = {};
+      String[] columns = {"ID","Event Name","Date","Attendees"};
      
      
      UI(){
@@ -30,7 +37,7 @@ public class UI extends JFrame implements ActionListener{
         setLocationRelativeTo(null);    
         setLayout(null);
 
-        
+       
         //Tabs & Panels
         tabbedPane = new JTabbedPane();
         tabbedPane.setBounds(0,0,1000,650);
@@ -90,11 +97,15 @@ public class UI extends JFrame implements ActionListener{
         btnDelete.setBounds(860, 70, 105, 32);
         eventPanel.add(btnDelete);
         
+        // Table & Scroll Pane
+        model = new DefaultTableModel(data, columns);
+        eventTable = new JTable(model);
+        scroll = new JScrollPane(eventTable);
+        scroll.setBounds(5, 120, 970, 460);
+        eventPanel.add(scroll);
+        
+        
      }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
     
 }
