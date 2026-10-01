@@ -14,34 +14,33 @@ import eventmanagement.model.Attendee;
 
 
 public class UI extends JFrame implements ActionListener {
-    private LinkedList<Event> linkedList = new LinkedList<>();
-    private LinkedList<Event> displayedEvents = new LinkedList<>();
-    private DefaultListModel<Attendee> listModel = new DefaultListModel<>();
-    private JList<Attendee> list;
-    private JComboBox<Event> attendeeEvent;
-    private JTextField txtAttendeeName, txtEmail;
-    private JButton btnAddAttendee, btnRemoveAttendee;
-    private int nextEventId = 1, nextAttendeeId = 1;
-    private long nextWaitingOrder = 1;
-    private DefaultListModel<WaitingEntry> waitingModel;
-    private JList<WaitingEntry> waitingList;
-    private JComboBox<Event> waitingEvent;
-    private JTextField txtWaitingName, txtWaitingEmail;
-    private JSpinner waitingPriority;
-    private JButton btnJoinWaiting, btnAdmitNext, btnRemoveWaiting;
-    private JPanel waitingPanel;
     
+    // Declaring Components
+
      private DefaultTableModel model;
      private JTabbedPane tabbedPane;
-     private JPanel eventPanel, attendeePanel, reportPanel;
+     private JPanel eventPanel, attendeePanel, reportPanel, waitingPanel;
      private JLabel lblEventName, lblCategory, lblDate, lblSearch;
-     private JTextField txtEventName, txtDate, txtCategory, txtSearch;
-     private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnShowAll;
+     private JTextField txtEventName, txtDate, txtCategory, txtSearch, txtWaitingName, txtWaitingEmail, txtAttendeeName, txtEmail;
+     private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnShowAll, btnJoinWaiting, btnAdmitNext, btnRemoveWaiting, btnAddAttendee, btnRemoveAttendee;
      private JTable eventTable;
      private JScrollPane scroll;
      private JComboBox<String> searchType;
      private JComboBox<String> searchAlgorithm;
+     private JSpinner waitingPriority;
+     private JComboBox<Event> waitingEvent;
+     private JComboBox<Event> attendeeEvent;
+     private JList<WaitingEntry> waitingList;
+     private JList<Attendee> list;
+     private DefaultListModel<WaitingEntry> waitingModel;
+     private LinkedList<Event> linkedList = new LinkedList<>();
+     private LinkedList<Event> displayedEvents = new LinkedList<>();
+     private DefaultListModel<Attendee> listModel = new DefaultListModel<>();
+     private int nextEventId = 1, nextAttendeeId = 1;
+     private long nextWaitingOrder = 1;
      
+     
+     // Declaring Event Table Columns
       Object[][] data = {};
       String[] columns = {"ID","Event Name","Date","Category","Attendees"};
      
@@ -54,7 +53,7 @@ public class UI extends JFrame implements ActionListener {
         setLocationRelativeTo(null);    
         setLayout(null);
 
-       
+       // Tabs & Panels
         tabbedPane = new JTabbedPane();
         tabbedPane.setBounds(0,0,1000,650);
         
@@ -68,54 +67,15 @@ public class UI extends JFrame implements ActionListener {
 
         waitingPanel = new JPanel();
         waitingPanel.setLayout(null);
-        tabbedPane.addTab("Waiting List", waitingPanel);
-        waitingEvent = new JComboBox<>();
-        waitingEvent.setBounds(10, 10, 850, 30);
-        waitingPanel.add(waitingEvent);
-        waitingModel = new DefaultListModel<>();
-        waitingList = new JList<>(waitingModel);
-        JScrollPane waitingScroll = new JScrollPane(waitingList);
-        waitingScroll.setBounds(10, 50, 850, 350);
-        waitingPanel.add(waitingScroll);
-        JLabel lblWaitingName = new JLabel("Attendee Name:");
-        lblWaitingName.setBounds(10, 410, 200, 25);
-        waitingPanel.add(lblWaitingName);
-        txtWaitingName = new JTextField();
-        txtWaitingName.setBounds(10, 440, 250, 30);
-        waitingPanel.add(txtWaitingName);
-        JLabel lblWaitingEmail = new JLabel("Email:");
-        lblWaitingEmail.setBounds(270, 410, 200, 25);
-        waitingPanel.add(lblWaitingEmail);
-        txtWaitingEmail = new JTextField();
-        txtWaitingEmail.setBounds(270, 440, 250, 30);
-        waitingPanel.add(txtWaitingEmail);
-        JLabel lblPriority = new JLabel("Priority (1 = highest):");
-        lblPriority.setBounds(530, 410, 200, 25);
-        waitingPanel.add(lblPriority);
-        waitingPriority = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
-        waitingPriority.setBounds(530, 440, 100, 30);
-        waitingPanel.add(waitingPriority);
-        btnJoinWaiting = new JButton("Join Waiting List");
-        btnJoinWaiting.setBounds(650, 440, 180, 30);
-        waitingPanel.add(btnJoinWaiting);
-        btnAdmitNext = new JButton("Admit Next");
-        btnAdmitNext.setBounds(10, 480, 150, 30);
-        waitingPanel.add(btnAdmitNext);
-        btnRemoveWaiting = new JButton("Remove Selected");
-        btnRemoveWaiting.setBounds(170, 480, 180, 30);
-        waitingPanel.add(btnRemoveWaiting);
-        waitingEvent.addActionListener(this);
-        btnJoinWaiting.addActionListener(this);
-        btnAdmitNext.addActionListener(this);
-        btnRemoveWaiting.addActionListener(this);
-        
+        tabbedPane.addTab("Waiting List", waitingPanel);       
+       
         reportPanel = new JPanel();
         reportPanel.setLayout(null);
         tabbedPane.addTab("Reports", reportPanel);
         add(tabbedPane);
         
         
-      
+        // Labels
         lblEventName = new JLabel("Event Name:");
         lblEventName.setBounds(5, 40, 150, 30);
         eventPanel.add(lblEventName);
@@ -128,6 +88,28 @@ public class UI extends JFrame implements ActionListener {
         lblCategory.setBounds(415, 40, 100, 30);
         eventPanel.add(lblCategory);
         
+        JLabel lblWaitingName = new JLabel("Attendee Name:");
+        lblWaitingName.setBounds(10, 410, 200, 25);
+        waitingPanel.add(lblWaitingName);
+        
+        JLabel lblWaitingEmail = new JLabel("Email:");
+        lblWaitingEmail.setBounds(270, 410, 200, 25);
+        waitingPanel.add(lblWaitingEmail);
+        
+        JLabel lblPriority = new JLabel("Priority (1 = highest):");
+        lblPriority.setBounds(530, 410, 200, 25);
+        waitingPanel.add(lblPriority);
+        
+        JLabel lblName = new JLabel("Attendee Name:");
+        lblName.setBounds(10, 410, 200, 25);
+        attendeePanel.add(lblName);
+      
+        
+        JLabel lblEmail = new JLabel("Email:");
+        lblEmail.setBounds(270, 410, 250, 25);
+        attendeePanel.add(lblEmail);
+        
+        // TextFields
         txtEventName = new JTextField();
         txtEventName.setBounds(5, 70, 195, 32);
         eventPanel.add(txtEventName);
@@ -144,6 +126,24 @@ public class UI extends JFrame implements ActionListener {
         txtSearch.setBounds(390, 535, 190, 30);
         eventPanel.add(txtSearch);
         
+        txtWaitingName = new JTextField();
+        txtWaitingName.setBounds(10, 440, 250, 30);
+        waitingPanel.add(txtWaitingName);
+        
+        txtWaitingEmail = new JTextField();
+        txtWaitingEmail.setBounds(270, 440, 250, 30);
+        waitingPanel.add(txtWaitingEmail);
+        
+        txtEmail = new JTextField();
+        txtEmail.setBounds(270, 440, 250, 30);
+        attendeePanel.add(txtEmail);
+        
+        txtAttendeeName = new JTextField();
+        txtAttendeeName.setBounds(10, 440, 250, 30);
+        attendeePanel.add(txtAttendeeName);
+        
+        
+        // Buttons
         btnAdd = new JButton("Add Event");
         btnAdd.setBounds(620, 70, 105, 32);
         eventPanel.add(btnAdd);
@@ -164,47 +164,81 @@ public class UI extends JFrame implements ActionListener {
         btnShowAll.setBounds(687, 535, 93, 30);
         eventPanel.add(btnShowAll);
         
+        btnJoinWaiting = new JButton("Join Waiting List");
+        btnJoinWaiting.setBounds(650, 440, 180, 30);
+        waitingPanel.add(btnJoinWaiting);
+        
+        
+        btnAdmitNext = new JButton("Admit Next");
+        btnAdmitNext.setBounds(10, 480, 150, 30);
+        waitingPanel.add(btnAdmitNext);
+        
+        
+        btnRemoveWaiting = new JButton("Remove Selected");
+        btnRemoveWaiting.setBounds(170, 480, 180, 30);
+        waitingPanel.add(btnRemoveWaiting);
+        
+        btnAddAttendee = new JButton("Add");
+        btnAddAttendee.setBounds(530, 440, 130, 30);
+        attendeePanel.add(btnAddAttendee);
+        
+        btnRemoveAttendee = new JButton("Remove");
+        btnRemoveAttendee.setBounds(530, 480, 130, 30);
+        attendeePanel.add(btnRemoveAttendee);
+        
+        
+        // Table & ScrollPane
         model = new DefaultTableModel(data, columns);
         eventTable = new JTable(model);
         scroll = new JScrollPane(eventTable);
         scroll.setBounds(5, 120, 970, 400);
         eventPanel.add(scroll);
         
+        list = new JList<>(listModel);
+        JScrollPane scrollPane = new JScrollPane(list);
+        scrollPane.setBounds(10, 50, 650, 350);
+        attendeePanel.add(scrollPane);
+        
+        waitingModel = new DefaultListModel<>();
+        waitingList = new JList<>(waitingModel);
+        JScrollPane waitingScroll = new JScrollPane(waitingList);
+        waitingScroll.setBounds(10, 50, 850, 350);
+        waitingPanel.add(waitingScroll);
+        
+        
+        // ComboBox & Spinner
         searchAlgorithm = new JComboBox<>();
         searchAlgorithm.addItem("Linear Search");
         searchAlgorithm.addItem("Binary Search");
         searchAlgorithm.setBounds(10, 535, 190, 30);
         eventPanel.add(searchAlgorithm);
+        
         searchType = new JComboBox<>();
         searchType.addItem("Search by Date");
         searchType.addItem("Search by Category");
         searchType.setBounds(210, 535, 170, 30);
         eventPanel.add(searchType);
+        
+        waitingEvent = new JComboBox<>();
+        waitingEvent.setBounds(10, 10, 850, 30);
+        waitingPanel.add(waitingEvent);
+        
         attendeeEvent = new JComboBox<>();
         attendeeEvent.setBounds(10, 10, 650, 30);
         attendeePanel.add(attendeeEvent);
-        list = new JList<>(listModel);
-        JScrollPane scrollPane = new JScrollPane(list);
-        scrollPane.setBounds(10, 50, 650, 350);
-        attendeePanel.add(scrollPane);
-        JLabel lblName = new JLabel("Attendee Name:");
-        lblName.setBounds(10, 410, 200, 25);
-        attendeePanel.add(lblName);
-        txtAttendeeName = new JTextField();
-        txtAttendeeName.setBounds(10, 440, 250, 30);
-        attendeePanel.add(txtAttendeeName);
-        JLabel lblEmail = new JLabel("Email:");
-        lblEmail.setBounds(270, 410, 250, 25);
-        attendeePanel.add(lblEmail);
-        txtEmail = new JTextField();
-        txtEmail.setBounds(270, 440, 250, 30);
-        attendeePanel.add(txtEmail);
-        btnAddAttendee = new JButton("Add");
-        btnAddAttendee.setBounds(530, 440, 130, 30);
-        attendeePanel.add(btnAddAttendee);
-        btnRemoveAttendee = new JButton("Remove");
-        btnRemoveAttendee.setBounds(530, 480, 130, 30);
-        attendeePanel.add(btnRemoveAttendee);
+        
+        waitingPriority = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
+        waitingPriority.setBounds(530, 440, 100, 30);
+        waitingPanel.add(waitingPriority);
+        
+        
+        
+        
+        //Adding ActionListener
+        waitingEvent.addActionListener(this);
+        btnJoinWaiting.addActionListener(this);
+        btnAdmitNext.addActionListener(this);
+        btnRemoveWaiting.addActionListener(this);
         btnAdd.addActionListener(this);
         btnUpdate.addActionListener(this);
         btnDelete.addActionListener(this);
@@ -213,6 +247,13 @@ public class UI extends JFrame implements ActionListener {
         btnAddAttendee.addActionListener(this);
         btnRemoveAttendee.addActionListener(this);
         attendeeEvent.addActionListener(this);
+        waitingEvent.addActionListener(this);
+        btnJoinWaiting.addActionListener(this);
+        btnAdmitNext.addActionListener(this);
+        btnRemoveWaiting.addActionListener(this);
+        
+        
+        
         eventTable.setDefaultEditor(Object.class, null);
         eventTable.getSelectionModel().addListSelectionListener(e -> {
             int index = eventTable.getSelectedRow();
@@ -221,6 +262,7 @@ public class UI extends JFrame implements ActionListener {
                 txtEventName.setText(event.getName());
                 txtDate.setText(event.getDate());
                 txtCategory.setText(event.getCategory());
+                
             }
         });
         
