@@ -1,24 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package eventmanagement.model;
 
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 
-/**
- *
- * @author reirii
- */
+
 public class Event {
     private int eventId;
     private String name;
     private String date;
     private String category = "";
     private LinkedList<Attendee> attendees;
+    private PriorityQueue<WaitingEntry> waitingList = new PriorityQueue<>();
     
     
-    //Event constructor ☜(ﾟヮﾟ☜)
     public Event(int eventId, String name, String date){
         this.eventId = eventId;
         this.name = name;
@@ -26,13 +20,13 @@ public class Event {
         this.attendees = new LinkedList<>();
     }
     
-    //Setters and getters ᕦ(ò_óˇ)ᕤ
     public int getEventId(){return eventId;}
     public String getName(){return name;}
     public String getDate(){return date;}
     public String getCategory(){return category;}
     public void setCategory(String category){this.category = category;}
     public LinkedList <Attendee> getAttendees() {return attendees;}
+    public PriorityQueue<WaitingEntry> getWaitingList(){return waitingList;}
 
     public void setName(String name){this.name = name;}
     public void setDate(String date){this.date = date;}
