@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package eventmanagement.ui;
 
 
@@ -10,13 +6,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import eventmanagement.model.WaitingEntry;
 import eventmanagement.model.Event;
 import eventmanagement.model.Attendee;
 
-/**
- *
- * @author reirii
- */
+
 public class UI extends JFrame implements ActionListener {
     private LinkedList<Event> linkedList = new LinkedList<>();
     private LinkedList<Event> displayedEvents = new LinkedList<>();
@@ -26,8 +22,15 @@ public class UI extends JFrame implements ActionListener {
     private JTextField txtAttendeeName, txtEmail;
     private JButton btnAddAttendee, btnRemoveAttendee;
     private int nextEventId = 1, nextAttendeeId = 1;
+    private long nextWaitingOrder = 1;
+    private DefaultListModel<WaitingEntry> waitingModel;
+    private JList<WaitingEntry> waitingList;
+    private JComboBox<Event> waitingEvent;
+    private JTextField txtWaitingName, txtWaitingEmail;
+    private JSpinner waitingPriority;
+    private JButton btnJoinWaiting, btnAdmitNext, btnRemoveWaiting;
+    private JPanel waitingPanel;
     
-    // Declaring Components
      private DefaultTableModel model;
      private JTabbedPane tabbedPane;
      private JPanel eventPanel, attendeePanel, reportPanel;
@@ -37,8 +40,8 @@ public class UI extends JFrame implements ActionListener {
      private JTable eventTable;
      private JScrollPane scroll;
      private JComboBox<String> searchType;
+     private JComboBox<String> searchAlgorithm;
      
-     // Declaring Table Columns
       Object[][] data = {};
       String[] columns = {"ID","Event Name","Date","Category","Attendees"};
      
@@ -52,7 +55,6 @@ public class UI extends JFrame implements ActionListener {
         setLayout(null);
 
        
-        //Tabs & Panels
         tabbedPane = new JTabbedPane();
         tabbedPane.setBounds(0,0,1000,650);
         
@@ -63,6 +65,49 @@ public class UI extends JFrame implements ActionListener {
         attendeePanel = new JPanel();
         attendeePanel.setLayout(null);
         tabbedPane.addTab("Attendees", attendeePanel);
+
+        waitingPanel = new JPanel();
+        waitingPanel.setLayout(null);
+        tabbedPane.addTab("Waiting List", waitingPanel);
+        waitingEvent = new JComboBox<>();
+        waitingEvent.setBounds(10, 10, 850, 30);
+        waitingPanel.add(waitingEvent);
+        waitingModel = new DefaultListModel<>();
+        waitingList = new JList<>(waitingModel);
+        JScrollPane waitingScroll = new JScrollPane(waitingList);
+        waitingScroll.setBounds(10, 50, 850, 350);
+        waitingPanel.add(waitingScroll);
+        JLabel lblWaitingName = new JLabel("Attendee Name:");
+        lblWaitingName.setBounds(10, 410, 200, 25);
+        waitingPanel.add(lblWaitingName);
+        txtWaitingName = new JTextField();
+        txtWaitingName.setBounds(10, 440, 250, 30);
+        waitingPanel.add(txtWaitingName);
+        JLabel lblWaitingEmail = new JLabel("Email:");
+        lblWaitingEmail.setBounds(270, 410, 200, 25);
+        waitingPanel.add(lblWaitingEmail);
+        txtWaitingEmail = new JTextField();
+        txtWaitingEmail.setBounds(270, 440, 250, 30);
+        waitingPanel.add(txtWaitingEmail);
+        JLabel lblPriority = new JLabel("Priority (1 = highest):");
+        lblPriority.setBounds(530, 410, 200, 25);
+        waitingPanel.add(lblPriority);
+        waitingPriority = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
+        waitingPriority.setBounds(530, 440, 100, 30);
+        waitingPanel.add(waitingPriority);
+        btnJoinWaiting = new JButton("Join Waiting List");
+        btnJoinWaiting.setBounds(650, 440, 180, 30);
+        waitingPanel.add(btnJoinWaiting);
+        btnAdmitNext = new JButton("Admit Next");
+        btnAdmitNext.setBounds(10, 480, 150, 30);
+        waitingPanel.add(btnAdmitNext);
+        btnRemoveWaiting = new JButton("Remove Selected");
+        btnRemoveWaiting.setBounds(170, 480, 180, 30);
+        waitingPanel.add(btnRemoveWaiting);
+        waitingEvent.addActionListener(this);
+        btnJoinWaiting.addActionListener(this);
+        btnAdmitNext.addActionListener(this);
+        btnRemoveWaiting.addActionListener(this);
         
         reportPanel = new JPanel();
         reportPanel.setLayout(null);
@@ -70,9 +115,7 @@ public class UI extends JFrame implements ActionListener {
         add(tabbedPane);
         
         
-                 // Event Panel
       
-        // Labels
         lblEventName = new JLabel("Event Name:");
         lblEventName.setBounds(5, 40, 150, 30);
         eventPanel.add(lblEventName);
@@ -85,7 +128,6 @@ public class UI extends JFrame implements ActionListener {
         lblCategory.setBounds(415, 40, 100, 30);
         eventPanel.add(lblCategory);
         
-        // TextFields
         txtEventName = new JTextField();
         txtEventName.setBounds(5, 70, 195, 32);
         eventPanel.add(txtEventName);
@@ -102,7 +144,6 @@ public class UI extends JFrame implements ActionListener {
         txtSearch.setBounds(390, 535, 190, 30);
         eventPanel.add(txtSearch);
         
-        // Buttons
         btnAdd = new JButton("Add Event");
         btnAdd.setBounds(620, 70, 105, 32);
         eventPanel.add(btnAdd);
@@ -123,14 +164,17 @@ public class UI extends JFrame implements ActionListener {
         btnShowAll.setBounds(687, 535, 93, 30);
         eventPanel.add(btnShowAll);
         
-        // Table & Scroll Pane
         model = new DefaultTableModel(data, columns);
         eventTable = new JTable(model);
         scroll = new JScrollPane(eventTable);
         scroll.setBounds(5, 120, 970, 400);
         eventPanel.add(scroll);
         
-        // Search Bar
+        searchAlgorithm = new JComboBox<>();
+        searchAlgorithm.addItem("Linear Search");
+        searchAlgorithm.addItem("Binary Search");
+        searchAlgorithm.setBounds(10, 535, 190, 30);
+        eventPanel.add(searchAlgorithm);
         searchType = new JComboBox<>();
         searchType.addItem("Search by Date");
         searchType.addItem("Search by Category");
@@ -186,13 +230,16 @@ public class UI extends JFrame implements ActionListener {
 
     
     private void showEvents(){
+        eventTable.clearSelection();
         displayedEvents.clear();
         String search = txtSearch.getText().trim();
-        for(Event event : linkedList){
-            String value = searchType.getSelectedIndex() == 0 ? event.getDate() : event.getCategory();
-            if(search.isEmpty() || value.equalsIgnoreCase(search)){
-                displayedEvents.add(event);
-            }
+        boolean byDate = searchType.getSelectedIndex() == 0;
+        if(search.isEmpty()){
+            displayedEvents.addAll(linkedList);
+        }else if(searchAlgorithm.getSelectedIndex() == 0){
+            displayedEvents.addAll(linearSearch(linkedList, search, byDate));
+        }else{
+            displayedEvents.addAll(binarySearch(linkedList, search, byDate));
         }
         model.setRowCount(0);
         for(Event event : displayedEvents){
@@ -215,6 +262,56 @@ public class UI extends JFrame implements ActionListener {
         JOptionPane.showMessageDialog(this, message, "Input Error", JOptionPane.ERROR_MESSAGE);
     }
 
+    private static String searchValue(Event event, boolean byDate){
+        return byDate ? event.getDate() : event.getCategory();
+    }
+
+    static LinkedList<Event> linearSearch(LinkedList<Event> events, String search, boolean byDate){
+        LinkedList<Event> results = new LinkedList<>();
+        for(Event event : events){
+            if(searchValue(event, byDate).equalsIgnoreCase(search)){
+                results.add(event);
+            }
+        }
+        return results;
+    }
+
+    static LinkedList<Event> binarySearch(LinkedList<Event> events, String search, boolean byDate){
+        LinkedList<Event> results = new LinkedList<>();
+        ArrayList<Event> sortedEvents = new ArrayList<>(events);
+        sortedEvents.sort((first, second) -> searchValue(first, byDate)
+            .compareToIgnoreCase(searchValue(second, byDate)));
+        int low = 0;
+        int high = sortedEvents.size() - 1;
+        while(low <= high){
+            int middle = low + (high - low) / 2;
+            int comparison = searchValue(sortedEvents.get(middle), byDate)
+                .compareToIgnoreCase(search);
+            if(comparison < 0){
+                low = middle + 1;
+            }else{
+                high = middle - 1;
+            }
+        }
+        while(low < sortedEvents.size()
+                && searchValue(sortedEvents.get(low), byDate).equalsIgnoreCase(search)){
+            results.add(sortedEvents.get(low));
+            low++;
+        }
+        return results;
+    }
+
+    private void showWaitingList(){
+        waitingModel.clear();
+        Event event = (Event) waitingEvent.getSelectedItem();
+        if(event != null){
+            PriorityQueue<WaitingEntry> ordered = new PriorityQueue<>(event.getWaitingList());
+            while(!ordered.isEmpty()){
+                waitingModel.addElement(ordered.poll());
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == btnAdd || e.getSource() == btnUpdate){
@@ -231,6 +328,7 @@ public class UI extends JFrame implements ActionListener {
                 event.setCategory(category);
                 linkedList.add(event);
                 attendeeEvent.addItem(event);
+                waitingEvent.addItem(event);
             }else{
                 int indexSelected = eventTable.getSelectedRow();
                 if(indexSelected == -1){
@@ -247,12 +345,14 @@ public class UI extends JFrame implements ActionListener {
             txtCategory.setText("");
             showEvents();
             attendeeEvent.repaint();
+            waitingEvent.repaint();
         }else if(e.getSource() == btnDelete){
             int indexSelected = eventTable.getSelectedRow();
             if(indexSelected != -1){
                 Event event = displayedEvents.get(indexSelected);
                 linkedList.remove(event);
                 attendeeEvent.removeItem(event);
+                waitingEvent.removeItem(event);
                 showEvents();
             }else{
                 inputError("Please select event first");
@@ -266,6 +366,51 @@ public class UI extends JFrame implements ActionListener {
         }else if(e.getSource() == btnShowAll){
             txtSearch.setText("");
             showEvents();
+        }else if(e.getSource() == waitingEvent){
+            showWaitingList();
+        }else if(e.getSource() == btnJoinWaiting){
+            Event event = (Event) waitingEvent.getSelectedItem();
+            String name = txtWaitingName.getText().trim();
+            String email = txtWaitingEmail.getText().trim();
+            if(event == null){
+                inputError("Please add and select event first");
+            }else if(name.isEmpty() || email.isEmpty()){
+                inputError("Please enter attendee name and email first");
+            }else{
+                try{
+                    waitingPriority.commitEdit();
+                }catch(java.text.ParseException ex){
+                    inputError("Please enter a priority from 1 to 5");
+                    return;
+                }
+                Attendee attendee = new Attendee(nextAttendeeId++, name, email, event.getEventId());
+                event.getWaitingList().offer(new WaitingEntry(attendee,
+                    (Integer) waitingPriority.getValue(), nextWaitingOrder++));
+                txtWaitingName.setText("");
+                txtWaitingEmail.setText("");
+                showWaitingList();
+            }
+        }else if(e.getSource() == btnAdmitNext){
+            Event event = (Event) waitingEvent.getSelectedItem();
+            if(event == null || event.getWaitingList().isEmpty()){
+                inputError("The selected event has no waiting attendees");
+            }else{
+                event.addAttendee(event.getWaitingList().poll().getAttendee());
+                showWaitingList();
+                showAttendees();
+                showEvents();
+                attendeeEvent.repaint();
+                waitingEvent.repaint();
+            }
+        }else if(e.getSource() == btnRemoveWaiting){
+            Event event = (Event) waitingEvent.getSelectedItem();
+            WaitingEntry entry = waitingList.getSelectedValue();
+            if(event == null || entry == null){
+                inputError("Please select a waiting attendee first");
+            }else{
+                event.getWaitingList().remove(entry);
+                showWaitingList();
+            }
         }else if(e.getSource() == attendeeEvent){
             showAttendees();
         }else if(e.getSource() == btnAddAttendee){
