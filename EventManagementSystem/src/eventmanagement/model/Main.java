@@ -6,6 +6,7 @@ package eventmanagement.model;
 
 //testing lang buseng
 
+import eventmanagement.dao.eventDao;
 import eventmanagement.db.DBConnection;
 import java.sql.Connection;
 public class Main {
@@ -31,6 +32,12 @@ public class Main {
         }catch(Exception e){
                  System.out.println("Connection failed");
                  }
-    
+        
+        eventDao dao = new eventDao();
+        dao.addEvent(new Event(0, "U-WEEK", "2026-11-15"));
+        
+        for(Event e: dao.getAllEVents()){
+            System.out.println(e);
+        }
     }  
 }
