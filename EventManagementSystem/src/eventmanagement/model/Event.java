@@ -14,6 +14,7 @@ public class Event {
     private int eventId;
     private String name;
     private String date;
+    private String category = "";
     private LinkedList<Attendee> attendees;
     
     
@@ -29,6 +30,8 @@ public class Event {
     public int getEventId(){return eventId;}
     public String getName(){return name;}
     public String getDate(){return date;}
+    public String getCategory(){return category;}
+    public void setCategory(String category){this.category = category;}
     public LinkedList <Attendee> getAttendees() {return attendees;}
 
     public void setName(String name){this.name = name;}
