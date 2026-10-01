@@ -18,15 +18,16 @@ public class UI extends JFrame {
      private DefaultTableModel model;
      private JTabbedPane tabbedPane;
      private JPanel eventPanel, attendeePanel, reportPanel;
-     private JLabel lblEventName, lblCategory, lblDate;
-     private JTextField txtEventName, txtDate, txtCategory;
-     private JButton btnAdd, btnUpdate, btnDelete;
+     private JLabel lblEventName, lblCategory, lblDate, lblSearch;
+     private JTextField txtEventName, txtDate, txtCategory, txtSearch;
+     private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnShowAll;
      private JTable eventTable;
      private JScrollPane scroll;
+     private JComboBox<String> searchType;
      
      // Declaring Table Columns
       Object[][] data = {};
-      String[] columns = {"ID","Event Name","Date","Attendees"};
+      String[] columns = {"ID","Event Name","Date","Category","Attendees"};
      
      
      UI(){
@@ -83,6 +84,10 @@ public class UI extends JFrame {
         txtCategory = new JTextField();
         txtCategory.setBounds(415, 70, 195, 32);
         eventPanel.add(txtCategory);
+
+        txtSearch = new JTextField();
+        txtSearch.setBounds(390, 535, 190, 30);
+        eventPanel.add(txtSearch);
         
         // Buttons
         btnAdd = new JButton("Add Event");
@@ -97,12 +102,28 @@ public class UI extends JFrame {
         btnDelete.setBounds(860, 70, 105, 32);
         eventPanel.add(btnDelete);
         
+        btnSearch = new JButton("Search");
+        btnSearch.setBounds(587, 535, 93, 30);
+        eventPanel.add(btnSearch);
+        
+        btnShowAll = new JButton("Show all");
+        btnShowAll.setBounds(687, 535, 93, 30);
+        eventPanel.add(btnShowAll);
+        
         // Table & Scroll Pane
         model = new DefaultTableModel(data, columns);
         eventTable = new JTable(model);
         scroll = new JScrollPane(eventTable);
-        scroll.setBounds(5, 120, 970, 460);
+        scroll.setBounds(5, 120, 970, 400);
         eventPanel.add(scroll);
+        
+        // Search Bar
+        searchType = new JComboBox<>();
+        searchType.addItem("Search by Date");
+        searchType.addItem("Search by Category");
+        searchType.setBounds(210, 535, 170, 30);
+        eventPanel.add(searchType);
+        
         
         
      }
