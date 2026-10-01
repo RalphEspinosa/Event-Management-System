@@ -17,6 +17,7 @@ public class eventDao {
     //Saves a new event 
     public void addEvent(Event event){
        String sql = "INSERT INTO events (name, event_date) VALUES(?, ?)" ;
+       
        try (Connection conn = DBConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)){
            
