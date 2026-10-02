@@ -1,4 +1,6 @@
-package eventmanagement.model;
+package eventmanagement.ds;
+
+import eventmanagement.model.Attendee;
 
 public class WaitingEntry implements Comparable<WaitingEntry> {
     private final Attendee attendee;
