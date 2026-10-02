@@ -6,14 +6,21 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
-import java.util.ArrayList;
+import eventmanagement.ds.dataStructures;
 import java.util.PriorityQueue;
-import eventmanagement.model.WaitingEntry;
+import eventmanagement.ds.WaitingEntry;
 import eventmanagement.model.Event;
 import eventmanagement.model.Attendee;
 
 
 public class UI extends JFrame implements ActionListener {
+    public static void main(String[] args){
+        SwingUtilities.invokeLater(() -> {
+            UI sample = new UI();
+            sample.setVisible(true);
+        });
+    }
+
 
      private DefaultTableModel model;
      private JTabbedPane tabbedPane;
@@ -24,7 +31,6 @@ public class UI extends JFrame implements ActionListener {
      private JTable eventTable;
      private JScrollPane scroll;
      private JComboBox<String> searchType;
-     private JComboBox<String> searchAlgorithm;
      private JSpinner waitingPriority;
      private JComboBox<Event> waitingEvent;
      private JComboBox<Event> attendeeEvent;
@@ -60,7 +66,7 @@ public class UI extends JFrame implements ActionListener {
 
         waitingPanel = new JPanel();
         waitingPanel.setLayout(null);
-        tabbedPane.addTab("Waiting List", waitingPanel);
+        tabbedPane.addTab("Queue List", waitingPanel);
 
         reportPanel = new JPanel();
         reportPanel.setLayout(null);
@@ -149,7 +155,7 @@ public class UI extends JFrame implements ActionListener {
         btnShowAll.setBounds(687, 535, 93, 30);
         eventPanel.add(btnShowAll);
 
-        btnJoinWaiting = new JButton("Join Waiting List");
+        btnJoinWaiting = new JButton("Join Queue List");
         btnJoinWaiting.setBounds(650, 440, 180, 30);
         waitingPanel.add(btnJoinWaiting);
 
@@ -186,16 +192,10 @@ public class UI extends JFrame implements ActionListener {
         JScrollPane waitingScroll = new JScrollPane(waitingList);
         waitingScroll.setBounds(10, 50, 850, 350);
         waitingPanel.add(waitingScroll);
-        searchAlgorithm = new JComboBox<>();
-        searchAlgorithm.addItem("Linear Search");
-        searchAlgorithm.addItem("Binary Search");
-        searchAlgorithm.setBounds(10, 535, 190, 30);
-        eventPanel.add(searchAlgorithm);
-
         searchType = new JComboBox<>();
         searchType.addItem("Search by Date");
         searchType.addItem("Search by Category");
-        searchType.setBounds(210, 535, 170, 30);
+        searchType.setBounds(10, 535, 370, 30);
         eventPanel.add(searchType);
 
         waitingEvent = new JComboBox<>();
@@ -252,10 +252,10 @@ public class UI extends JFrame implements ActionListener {
         boolean byDate = searchType.getSelectedIndex() == 0;
         if(search.isEmpty()){
             displayedEvents.addAll(linkedList);
-        }else if(searchAlgorithm.getSelectedIndex() == 0){
-            displayedEvents.addAll(linearSearch(linkedList, search, byDate));
+        }else if(byDate){
+            displayedEvents.addAll(dataStructures.binarySearch(linkedList, search, byDate));
         }else{
-            displayedEvents.addAll(binarySearch(linkedList, search, byDate));
+            displayedEvents.addAll(dataStructures.linearSearch(linkedList, search, byDate));
         }
         model.setRowCount(0);
         for(Event event : displayedEvents){
@@ -276,45 +276,6 @@ public class UI extends JFrame implements ActionListener {
 
     private void inputError(String message){
         JOptionPane.showMessageDialog(this, message, "Input Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    private static String searchValue(Event event, boolean byDate){
-        return byDate ? event.getDate() : event.getCategory();
-    }
-
-    static LinkedList<Event> linearSearch(LinkedList<Event> events, String search, boolean byDate){
-        LinkedList<Event> results = new LinkedList<>();
-        for(Event event : events){
-            if(searchValue(event, byDate).equalsIgnoreCase(search)){
-                results.add(event);
-            }
-        }
-        return results;
-    }
-
-    static LinkedList<Event> binarySearch(LinkedList<Event> events, String search, boolean byDate){
-        LinkedList<Event> results = new LinkedList<>();
-        ArrayList<Event> sortedEvents = new ArrayList<>(events);
-        sortedEvents.sort((first, second) -> searchValue(first, byDate)
-            .compareToIgnoreCase(searchValue(second, byDate)));
-        int low = 0;
-        int high = sortedEvents.size() - 1;
-        while(low <= high){
-            int middle = low + (high - low) / 2;
-            int comparison = searchValue(sortedEvents.get(middle), byDate)
-                .compareToIgnoreCase(search);
-            if(comparison < 0){
-                low = middle + 1;
-            }else{
-                high = middle - 1;
-            }
-        }
-        while(low < sortedEvents.size()
-                && searchValue(sortedEvents.get(low), byDate).equalsIgnoreCase(search)){
-            results.add(sortedEvents.get(low));
-            low++;
-        }
-        return results;
     }
 
     private void showWaitingList(){
