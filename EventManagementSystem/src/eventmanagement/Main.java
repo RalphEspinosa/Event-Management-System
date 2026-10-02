@@ -1,6 +1,8 @@
-package eventmanagement.model;
+package eventmanagement;
 
-import eventmanagement.dao.eventDao;
+import eventmanagement.dao.EventDao;
+import eventmanagement.model.Attendee;
+import eventmanagement.model.Event;
 
 public class Main {
     public static void main(String[] args) {
@@ -20,7 +22,7 @@ public class Main {
             System.out.println(" - " + a);
         }
 
-        eventDao Eventdao = new eventDao();
+        EventDao Eventdao = new EventDao();
         for (Event e : Eventdao.getAllEVents()) {
             System.out.println(e);
             for (Attendee a : e.getAttendees()) {

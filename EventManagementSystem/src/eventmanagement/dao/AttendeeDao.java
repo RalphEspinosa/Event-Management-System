@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class attendeeDao {
+public class AttendeeDao {
     public void addAttendee(Attendee attendee){
         String sql = "INSERT INTO attendees (name, email, event_id) VALUES(?, ?, ?)";
         

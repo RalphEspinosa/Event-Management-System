@@ -12,7 +12,6 @@ public class Event {
     private String date;
     private String category = "";
     private LinkedList<Attendee> attendees;
-    private PriorityQueue<WaitingEntry> waitingList = new PriorityQueue<>();
     
     
     public Event(int eventId, String name, String date){
@@ -28,7 +27,6 @@ public class Event {
     public String getCategory(){return category;}
     public void setCategory(String category){this.category = category;}
     public LinkedList <Attendee> getAttendees() {return attendees;}
-    public PriorityQueue<WaitingEntry> getWaitingList(){return waitingList;}
 
     public void setName(String name){this.name = name;}
     public void setDate(String date){this.date = date;}

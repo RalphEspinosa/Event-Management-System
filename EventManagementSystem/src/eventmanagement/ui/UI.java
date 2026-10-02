@@ -6,14 +6,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
-import eventmanagement.ds.dataStructures;
+import eventmanagement.ds.Search;
 import java.util.PriorityQueue;
 import eventmanagement.ds.WaitingEntry;
 import eventmanagement.model.Event;
 import eventmanagement.model.Attendee;
 
 
-public class UI extends JFrame implements ActionListener {
+public class UI extends JFrame /*implements ActionListener*/ {
     public static void main(String[] args){
         SwingUtilities.invokeLater(() -> {
             UI sample = new UI();
@@ -209,7 +209,7 @@ public class UI extends JFrame implements ActionListener {
         waitingPriority = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
         waitingPriority.setBounds(530, 440, 100, 30);
         waitingPanel.add(waitingPriority);
-        waitingEvent.addActionListener(this);
+        /*waitingEvent.addActionListener(this);
         btnJoinWaiting.addActionListener(this);
         btnAdmitNext.addActionListener(this);
         btnRemoveWaiting.addActionListener(this);
@@ -253,9 +253,9 @@ public class UI extends JFrame implements ActionListener {
         if(search.isEmpty()){
             displayedEvents.addAll(linkedList);
         }else if(byDate){
-            displayedEvents.addAll(dataStructures.binarySearch(linkedList, search, byDate));
+            displayedEvents.addAll(Search.binarySearch(linkedList, search, byDate));
         }else{
-            displayedEvents.addAll(dataStructures.linearSearch(linkedList, search, byDate));
+            displayedEvents.addAll(Search.linearSearch(linkedList, search, byDate));
         }
         model.setRowCount(0);
         for(Event event : displayedEvents){
@@ -278,16 +278,6 @@ public class UI extends JFrame implements ActionListener {
         JOptionPane.showMessageDialog(this, message, "Input Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private void showWaitingList(){
-        waitingModel.clear();
-        Event event = (Event) waitingEvent.getSelectedItem();
-        if(event != null){
-            PriorityQueue<WaitingEntry> ordered = new PriorityQueue<>(event.getWaitingList());
-            while(!ordered.isEmpty()){
-                waitingModel.addElement(ordered.poll());
-            }
-        }
-    }
 
     @Override
     public void actionPerformed(ActionEvent e){
@@ -418,6 +408,6 @@ public class UI extends JFrame implements ActionListener {
             }else{
                 inputError("Please select attendee first");
             }
-        }
+        }*/
     }
 }

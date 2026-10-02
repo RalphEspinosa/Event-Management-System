@@ -12,7 +12,7 @@ import eventmanagement.model.Event;
  *
  * @author reirii
  */
-public class dataStructures {
+public class Search {
     private static String searchValue(Event event, boolean byDate){
         return byDate ? event.getDate() : event.getCategory();
     }

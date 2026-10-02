@@ -14,9 +14,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class eventDao {
+public class EventDao {
     
-    private attendeeDao dao = new attendeeDao();
+    private AttendeeDao dao = new AttendeeDao();
     //Saves a new event 
     public void addEvent(Event event){
        String sql = "INSERT INTO events (name, event_date) VALUES(?, ?)" ;
