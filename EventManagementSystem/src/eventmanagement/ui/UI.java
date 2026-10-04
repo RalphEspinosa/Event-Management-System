@@ -11,6 +11,9 @@ import java.util.PriorityQueue;
 import eventmanagement.ds.WaitingEntry;
 import eventmanagement.model.Event;
 import eventmanagement.model.Attendee;
+import java.awt.Font;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class UI extends JFrame /*implements ActionListener*/ {
@@ -21,7 +24,8 @@ public class UI extends JFrame /*implements ActionListener*/ {
         });
     }
 
-
+     //Declaring Components
+    
      private DefaultTableModel model;
      private JTabbedPane tabbedPane;
      private JPanel eventPanel, attendeePanel, reportPanel, waitingPanel;
@@ -42,6 +46,12 @@ public class UI extends JFrame /*implements ActionListener*/ {
      private DefaultListModel<Attendee> listModel = new DefaultListModel<>();
      private int nextEventId = 1, nextAttendeeId = 1;
      private long nextWaitingOrder = 1;
+     private JLabel lblReportTitle;
+     private JTextArea txtReport;
+     private JScrollPane reportScroll;
+     private JButton btnGenerateReport;
+     
+     //Declaring Event Table Columns
       Object[][] data = {};
       String[] columns = {"ID","Event Name","Date","Category","Attendees"};
 
@@ -53,6 +63,13 @@ public class UI extends JFrame /*implements ActionListener*/ {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
+        
+        //Logo
+        ImageIcon image = new ImageIcon("event.png");
+        setIconImage(image.getImage());
+        
+        
+        //Tabs and Panels
         tabbedPane = new JTabbedPane();
         tabbedPane.setBounds(0,0,1000,650);
 
@@ -72,6 +89,8 @@ public class UI extends JFrame /*implements ActionListener*/ {
         reportPanel.setLayout(null);
         tabbedPane.addTab("Reports", reportPanel);
         add(tabbedPane);
+        
+        //Labels
         lblEventName = new JLabel("Event Name:");
         lblEventName.setBounds(5, 40, 150, 30);
         eventPanel.add(lblEventName);
@@ -104,6 +123,13 @@ public class UI extends JFrame /*implements ActionListener*/ {
         JLabel lblEmail = new JLabel("Email:");
         lblEmail.setBounds(270, 410, 250, 25);
         attendeePanel.add(lblEmail);
+
+        lblReportTitle = new JLabel("REPORT PANEL");
+        lblReportTitle.setFont(lblReportTitle.getFont().deriveFont(Font.BOLD, 14f));
+        lblReportTitle.setBounds(5, 10, 300, 25);
+        reportPanel.add(lblReportTitle);
+        
+        //Text Fields
         txtEventName = new JTextField();
         txtEventName.setBounds(5, 70, 195, 32);
         eventPanel.add(txtEventName);
@@ -135,6 +161,8 @@ public class UI extends JFrame /*implements ActionListener*/ {
         txtAttendeeName = new JTextField();
         txtAttendeeName.setBounds(10, 440, 250, 30);
         attendeePanel.add(txtAttendeeName);
+        
+        //Buttons
         btnAdd = new JButton("Add Event");
         btnAdd.setBounds(620, 70, 105, 32);
         eventPanel.add(btnAdd);
@@ -176,6 +204,13 @@ public class UI extends JFrame /*implements ActionListener*/ {
         btnRemoveAttendee = new JButton("Remove");
         btnRemoveAttendee.setBounds(530, 480, 130, 30);
         attendeePanel.add(btnRemoveAttendee);
+
+        btnGenerateReport = new JButton("Generate Attendance Report");
+        btnGenerateReport.setBounds(5, 510, 970, 32);
+        btnGenerateReport.addActionListener(e -> generateReport());
+        reportPanel.add(btnGenerateReport);
+        
+        //Tables and ScrollPane
         model = new DefaultTableModel(data, columns);
         eventTable = new JTable(model);
         scroll = new JScrollPane(eventTable);
@@ -184,7 +219,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
 
         list = new JList<>(listModel);
         JScrollPane scrollPane = new JScrollPane(list);
-        scrollPane.setBounds(10, 50, 650, 350);
+        scrollPane.setBounds(10, 50, 850, 350);
         attendeePanel.add(scrollPane);
 
         waitingModel = new DefaultListModel<>();
@@ -192,6 +227,15 @@ public class UI extends JFrame /*implements ActionListener*/ {
         JScrollPane waitingScroll = new JScrollPane(waitingList);
         waitingScroll.setBounds(10, 50, 850, 350);
         waitingPanel.add(waitingScroll);
+
+        txtReport = new JTextArea();
+        txtReport.setEditable(false);
+        txtReport.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
+        reportScroll = new JScrollPane(txtReport,
+                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        reportScroll.setBounds(5, 45, 970, 460);
+        reportPanel.add(reportScroll);
         searchType = new JComboBox<>();
         searchType.addItem("Search by Date");
         searchType.addItem("Search by Category");
@@ -203,12 +247,14 @@ public class UI extends JFrame /*implements ActionListener*/ {
         waitingPanel.add(waitingEvent);
 
         attendeeEvent = new JComboBox<>();
-        attendeeEvent.setBounds(10, 10, 650, 30);
+        attendeeEvent.setBounds(10, 10, 850, 30);
         attendeePanel.add(attendeeEvent);
 
         waitingPriority = new JSpinner(new SpinnerNumberModel(1, 1, 5, 1));
         waitingPriority.setBounds(530, 440, 100, 30);
         waitingPanel.add(waitingPriority);
+        
+        //Adding ActionListener
         /*waitingEvent.addActionListener(this);
         btnJoinWaiting.addActionListener(this);
         btnAdmitNext.addActionListener(this);
@@ -239,12 +285,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
 
             }
         });
-
-
-
      }
-
-
     private void showEvents(){
         eventTable.clearSelection();
         displayedEvents.clear();
@@ -409,5 +450,39 @@ public class UI extends JFrame /*implements ActionListener*/ {
                 inputError("Please select attendee first");
             }
         }*/
+    }
+
+    //Generates the attendance report and shows it in the report scroll pane
+    private void generateReport(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("EVENT MANAGEMENT SYSTEM - ATTENDANCE REPORT\n");
+        sb.append("Generated: ").append(LocalDateTime.now()
+            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))).append("\n");
+        sb.append("=".repeat(70)).append("\n\n");
+        int totalAttendees = 0;
+        if(linkedList.isEmpty()){
+            sb.append("No events found.\n\n");
+        }
+        for(Event ev : linkedList){
+            sb.append("Event #").append(ev.getEventId()).append(": ").append(ev.getName()).append("\n");
+            sb.append("Date      : ").append(ev.getDate()).append("\n");
+            sb.append("Category  : ").append(ev.getCategory()).append("\n");
+            sb.append("Attendees : ").append(ev.getAttendees().size()).append("\n");
+            if(ev.getAttendees().isEmpty()){
+                sb.append("   (no attendees registered)\n");
+            }else{
+                int n = 1;
+                for(Attendee a : ev.getAttendees()){
+                    sb.append(String.format("   %d. %-25s %s%n", n++, a.getName(), a.getEmail()));
+                }
+            }
+            sb.append("\n").append("-".repeat(70)).append("\n\n");
+            totalAttendees += ev.getAttendees().size();
+        }
+        sb.append("SUMMARY\n");
+        sb.append("Total events        : ").append(linkedList.size()).append("\n");
+        sb.append("Total attendees     : ").append(totalAttendees).append("\n");
+        txtReport.setText(sb.toString());
+        txtReport.setCaretPosition(0);
     }
 }
