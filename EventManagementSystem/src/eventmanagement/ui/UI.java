@@ -21,7 +21,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
         });
     }
 
-
+     // Declaring Components
      private DefaultTableModel model;
      private JTabbedPane tabbedPane;
      private JPanel eventPanel, attendeePanel, reportPanel, waitingPanel;
@@ -42,6 +42,8 @@ public class UI extends JFrame /*implements ActionListener*/ {
      private DefaultListModel<Attendee> listModel = new DefaultListModel<>();
      private int nextEventId = 1, nextAttendeeId = 1;
      private long nextWaitingOrder = 1;
+
+        // Declaring Table Columns
       Object[][] data = {};
       String[] columns = {"ID","Event Name","Date","Category","Attendees"};
 
@@ -53,6 +55,8 @@ public class UI extends JFrame /*implements ActionListener*/ {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
+
+         //Tabs & Panels
         tabbedPane = new JTabbedPane();
         tabbedPane.setBounds(0,0,1000,650);
 
@@ -72,6 +76,10 @@ public class UI extends JFrame /*implements ActionListener*/ {
         reportPanel.setLayout(null);
         tabbedPane.addTab("Reports", reportPanel);
         add(tabbedPane);
+
+          // Event Panel
+
+        // Labels
         lblEventName = new JLabel("Event Name:");
         lblEventName.setBounds(5, 40, 150, 30);
         eventPanel.add(lblEventName);
@@ -104,6 +112,8 @@ public class UI extends JFrame /*implements ActionListener*/ {
         JLabel lblEmail = new JLabel("Email:");
         lblEmail.setBounds(270, 410, 250, 25);
         attendeePanel.add(lblEmail);
+
+                // TextFields
         txtEventName = new JTextField();
         txtEventName.setBounds(5, 70, 195, 32);
         eventPanel.add(txtEventName);
@@ -139,6 +149,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
         btnAdd.setBounds(620, 70, 105, 32);
         eventPanel.add(btnAdd);
 
+                // Buttons
         btnUpdate = new JButton("Update");
         btnUpdate.setBounds(740, 70, 105, 32);
         eventPanel.add(btnUpdate);
@@ -176,6 +187,8 @@ public class UI extends JFrame /*implements ActionListener*/ {
         btnRemoveAttendee = new JButton("Remove");
         btnRemoveAttendee.setBounds(530, 480, 130, 30);
         attendeePanel.add(btnRemoveAttendee);
+
+                // Table & Scroll Pane
         model = new DefaultTableModel(data, columns);
         eventTable = new JTable(model);
         scroll = new JScrollPane(eventTable);
@@ -192,6 +205,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
         JScrollPane waitingScroll = new JScrollPane(waitingList);
         waitingScroll.setBounds(10, 50, 850, 350);
         waitingPanel.add(waitingScroll);
+                // Search Bar
         searchType = new JComboBox<>();
         searchType.addItem("Search by Date");
         searchType.addItem("Search by Category");

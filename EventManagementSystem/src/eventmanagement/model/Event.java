@@ -13,14 +13,14 @@ public class Event {
     private String category = "";
     private LinkedList<Attendee> attendees;
     
-    
+     //Event constructor ☜(ﾟヮﾟ☜)
     public Event(int eventId, String name, String date){
         this.eventId = eventId;
         this.name = name;
         this.date = date;
         this.attendees = new LinkedList<>();
     }
-    
+     //Setters and getters ᕦ(ò_óˇ)ᕤ
     public int getEventId(){return eventId;}
     public String getName(){return name;}
     public String getDate(){return date;}
