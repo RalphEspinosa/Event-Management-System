@@ -394,23 +394,38 @@ public class UI extends JFrame /*implements ActionListener*/ {
             }
         }else if(e.getSource() == attendeeEvent){
             showAttendees();
-        }else if(e.getSource() == btnAddAttendee){
-            Event event = (Event) attendeeEvent.getSelectedItem();
-            String name = txtAttendeeName.getText().trim();
-            String email = txtEmail.getText().trim();
-            if(event == null){
-                inputError("Please add and select event first");
-            }else if(name.isEmpty() || email.isEmpty()){
-                inputError("Please enter attendee name and email first");
-            }else{
-                Attendee attendee = new Attendee(nextAttendeeId++, name, email, event.getEventId());
-                event.getAttendees().add(attendee);
-                listModel.addElement(attendee);
-                txtAttendeeName.setText("");
-                txtEmail.setText("");
-                showEvents();
-                attendeeEvent.repaint();
-            }
+            }else if(e.getSource() == btnAddAttendee){
+                Event event = (Event) attendeeEvent.getSelectedItem();
+                String name = txtAttendeeName.getText().trim();
+                String email = txtEmail.getText().trim();
+
+            
+    if(event == null){
+        inputError("Please add and select event first");
+
+    }else if(name.isEmpty() || email.isEmpty()){
+        inputError("Please enter attendee name and email first");
+
+    }else if(event.getAttendees().size() >= EVENT_CAPACITY){
+        inputError("This event is already full. Maximum capacity is 50 attendees.");
+
+    }else{
+        Attendee attendee = new Attendee(
+            nextAttendeeId++,
+            name,
+            email,
+            event.getEventId()
+        );
+
+        event.getAttendees().add(attendee);
+        listModel.addElement(attendee);
+
+        txtAttendeeName.setText("");
+        txtEmail.setText("");
+
+        showEvents();
+        attendeeEvent.repaint();
+    }
         }else if(e.getSource() == btnRemoveAttendee){
             Event event = (Event) attendeeEvent.getSelectedItem();
             int indexSelected = list.getSelectedIndex();
