@@ -19,13 +19,15 @@ public class EventDao {
     private AttendeeDao dao = new AttendeeDao();
     //Saves a new event 
     public void addEvent(Event event){
-       String sql = "INSERT INTO events (name, event_date) VALUES(?, ?)" ;
+       String sql = "INSERT INTO events (name, event_date, capacity, category) VALUES(?, ?, ?, ?)" ;
        
        try (Connection conn = DBConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);){
            
             stmt.setString(1, event.getName());
             stmt.setString(2, event.getDate());
+            stmt.setInt(3, event.getCapacity());
+            stmt.setString(4, event.getCategory());
             stmt.executeUpdate();         
        }
        catch (SQLException e){
@@ -33,9 +35,9 @@ public class EventDao {
        }
     }
     //Reads every added events 
-    public List<Event> getAllEVents(){
+    public List<Event> getAllEvents(){
         List<Event> events = new ArrayList<>();
-        String sql = "SELECT event_id, name, event_date FROM events";
+        String sql = "SELECT event_id, name, event_date, capacity, category FROM events";
         try (Connection conn = DBConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery()){
@@ -44,7 +46,9 @@ public class EventDao {
                 Event event = new Event(
                   rs.getInt("event_id"),
                   rs.getString("name"),
-                  rs.getString("event_date")
+                  rs.getString("event_date"),
+                  rs.getInt("capacity"),
+                  rs.getString("category")
                 );
                 List<Attendee> eventAttendees = dao.getAttendeesByEvent(event.getEventId());
                 for(Attendee a: eventAttendees){
@@ -60,7 +64,7 @@ public class EventDao {
    }
     
     public Event getEventById(int eventId){
-        String sql = "SELECT event_id, name, event_date, FROM events where event_id = ?";
+        String sql = "SELECT event_id, name, event_date, capacity, category FROM events where event_id = ?";
         
         try (Connection conn = DBConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)){
@@ -71,7 +75,10 @@ public class EventDao {
                     Event event = new Event(
                     rs.getInt("event_id"),
                     rs.getString("name"),
-                    rs.getString("event_date"));
+                    rs.getString("event_date"),
+                    rs.getInt("capacity"),
+                    rs.getString("category")
+                    );
                     
                     List <Attendee> eventAttendees = dao.getAttendeesByEvent(eventId);
                     for(Attendee a: eventAttendees){

@@ -1,44 +1,47 @@
 package eventmanagement;
 
+import eventmanagement.dao.AttendeeDao;
 import eventmanagement.dao.EventDao;
+import eventmanagement.ds.Search;
 import eventmanagement.ds.WaitingEntry;
 import eventmanagement.model.Attendee;
-import eventmanagement.model.Attendee;
-import eventmanagement.model.Event;
 import eventmanagement.model.Event;
 import eventmanagement.ds.WaitlistManager;
-
+import java.util.*;
 //testing lang buseng
 public class Main {
     public static void main(String[] args) {
-        Event sample = new Event(1, "U-Week", "2026-12-08");
-
-        System.out.println(sample);
-        System.out.println("Attendee list: ");
-        for (Attendee a : sample.getAttendees()) {
-            System.out.println(" - " + a);
+        
+        //
+        EventDao eventDao = new EventDao();
+        AttendeeDao attendeeDao = new AttendeeDao();
+        
+        //eventDao.addEvent(new Event(0, "U_WEEK", "2026-11-20", 50, "Academic"));
+        //eventDao.addEvent(new Event(0, "CosMania", "2026-8-4", 1, "Cosplay convention"));
+        
+        for (Event e : eventDao.getAllEvents()) {
+            System.out.println(e + " | full? " + e.isFull());
         }
-
-        EventDao Eventdao = new EventDao();
-        for (Event e : Eventdao.getAllEVents()) {
-            System.out.println(e);
-            for (Attendee a : e.getAttendees()) {
-                System.out.println("  - " + a);
+        
+        int found= -1;
+        for(Event e: eventDao.getAllEvents()){
+            if(e.getName().equals("CosMania")){
+                found = e.getEventId();
             }
         }
+       // attendeeDao.addAttendee(new Attendee(0, "reiriin", "yuurei@gmail.com", found));
+        Event id = eventDao.getEventById(found);
+        System.out.println(id + " | full? " + id.isFull());
         
-        
-        WaitlistManager manager = new WaitlistManager();
-        
-        Attendee a1 = new Attendee(0, "Reirii", "reiriiyuu@gmail.com",3);
-        Attendee a2 = new Attendee(0, "Ralph", "ralph@gmail.com",3);
-        Attendee a3 = new Attendee(0, "Margarette", "margarette@gmail.com",3);
-        
-        manager.addToWaitlist(3, new WaitingEntry(a1, 3, System.currentTimeMillis()));
-        manager.addToWaitlist(3, new WaitingEntry(a2, 2, System.currentTimeMillis()));
-        manager.addToWaitlist(3, new WaitingEntry(a3, 1, System.currentTimeMillis()));
-        
-        System.out.println("Next: " + manager.pollNext(3));
-        
+         LinkedList<Event> all = new LinkedList<>(eventDao.getAllEvents());
+         
+         for(Event e: Search.linearSearch(all, "Academic", false)){
+             System.out.println("  " + e);
+         }
+         for(Event e: Search.binarySearch(all, "Cosplay convention", false)){
+             System.out.println(" " + e);
+         }
+         
+         
     }
 }
