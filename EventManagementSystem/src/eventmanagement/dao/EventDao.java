@@ -34,6 +34,37 @@ public class EventDao {
            System.out.println("Error adding event: " + e.getMessage());
        }
     }
+    //Updates an existing event
+    public void updateEvent(Event event){
+        String sql = "UPDATE events SET name = ?, event_date = ?, capacity = ?, category = ? WHERE event_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, event.getName());
+            stmt.setString(2, event.getDate());
+            stmt.setInt(3, event.getCapacity());
+            stmt.setString(4, event.getCategory());
+            stmt.setInt(5, event.getEventId());
+            stmt.executeUpdate();
+        }
+        catch (SQLException e){
+            System.out.println("Error updating event: " + e.getMessage());
+        }
+    }
+
+    //Deletes an event by its ID
+    public void deleteEvent(int eventId){
+        String sql = "DELETE FROM events WHERE event_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, eventId);
+            stmt.executeUpdate();
+        }
+        catch (SQLException e){
+            System.out.println("Error deleting event: " + e.getMessage());
+        }
+    }
     //Reads every added events 
     public List<Event> getAllEvents(){
         List<Event> events = new ArrayList<>();
