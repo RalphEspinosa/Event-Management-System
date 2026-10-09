@@ -29,6 +29,18 @@ public class AttendeeDao {
             System.out.println("Error adding attendee: " + e.getMessage());
         }
     }
+    public void removeAttendee(int attendeeId){
+        String sql = "DELETE FROM attendees WHERE id = ?";
+
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setInt(1, attendeeId);
+            stmt.executeUpdate();
+        }
+        catch(SQLException e){
+            System.out.println("Error removing attendee: " + e.getMessage());
+        }
+    }
     public List <Attendee> getAttendeesByEvent(int eventId){
         List<Attendee> attendees = new ArrayList<>();
         String sql = "SELECT id, name, email, event_id FROM attendees WHERE event_id = ?";
