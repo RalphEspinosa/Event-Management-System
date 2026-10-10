@@ -24,8 +24,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
         });
     }
 
-     //Declaring Components
-    
+     // Declaring Components
      private DefaultTableModel model;
      private JTabbedPane tabbedPane;
      private JPanel eventPanel, attendeePanel, reportPanel, waitingPanel;
@@ -46,12 +45,8 @@ public class UI extends JFrame /*implements ActionListener*/ {
      private DefaultListModel<Attendee> listModel = new DefaultListModel<>();
      private int nextEventId = 1, nextAttendeeId = 1;
      private long nextWaitingOrder = 1;
-     private JLabel lblReportTitle;
-     private JTextArea txtReport;
-     private JScrollPane reportScroll;
-     private JButton btnGenerateReport;
-     
-     //Declaring Event Table Columns
+
+        // Declaring Table Columns
       Object[][] data = {};
       String[] columns = {"ID","Event Name","Date","Category","Attendees"};
 
@@ -167,6 +162,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
         btnAdd.setBounds(620, 70, 105, 32);
         eventPanel.add(btnAdd);
 
+                // Buttons
         btnUpdate = new JButton("Update");
         btnUpdate.setBounds(740, 70, 105, 32);
         eventPanel.add(btnUpdate);
@@ -227,15 +223,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
         JScrollPane waitingScroll = new JScrollPane(waitingList);
         waitingScroll.setBounds(10, 50, 850, 350);
         waitingPanel.add(waitingScroll);
-
-        txtReport = new JTextArea();
-        txtReport.setEditable(false);
-        txtReport.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13));
-        reportScroll = new JScrollPane(txtReport,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        reportScroll.setBounds(5, 45, 970, 460);
-        reportPanel.add(reportScroll);
+                // Search Bar
         searchType = new JComboBox<>();
         searchType.addItem("Search by Date");
         searchType.addItem("Search by Category");
