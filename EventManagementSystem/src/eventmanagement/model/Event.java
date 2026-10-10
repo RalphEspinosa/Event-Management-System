@@ -46,6 +46,14 @@ public class Event {
     }
     @Override
     public String toString(){
+        return "Event #" + eventId + ": " + name + " on " + date + 
+           " (" + attendees.size() + " attendees)";  
+    }
+
+    public Object getWaitingList() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+   
         return "Event #" + eventId + ": " + name + " on " + date +
        " [" + category + "] (" + attendees.size() + "/" + capacity + " attendees)";
     } 
