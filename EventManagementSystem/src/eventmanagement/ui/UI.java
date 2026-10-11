@@ -372,16 +372,24 @@ public class UI extends JFrame /*implements ActionListener*/ {
                 showWaitingList();
             }
         }else if(e.getSource() == btnAdmitNext){
-            Event event = (Event) waitingEvent.getSelectedItem();
-            if(event == null || event.getWaitingList().isEmpty()){
-                inputError("The selected event has no waiting attendees");
-            }else{
-                event.addAttendee(event.getWaitingList().poll().getAttendee());
-                showWaitingList();
-                showAttendees();
-                showEvents();
-                attendeeEvent.repaint();
-                waitingEvent.repaint();
+    Event event = (Event) waitingEvent.getSelectedItem();
+
+    if(event == null || event.getWaitingList().isEmpty()){
+        inputError("The selected event has no waiting attendees");
+
+    }else if(event.getAttendees().size() >= EVENT_CAPACITY){
+        inputError("This event is already full. Maximum capacity is 50 attendees.");
+
+    }else{
+        event.addAttendee(
+            event.getWaitingList().poll().getAttendee()
+        );
+
+        showWaitingList();
+        showAttendees();
+        showEvents();
+        attendeeEvent.repaint();
+        waitingEvent.repaint();
             }
         }else if(e.getSource() == btnRemoveWaiting){
             Event event = (Event) waitingEvent.getSelectedItem();
