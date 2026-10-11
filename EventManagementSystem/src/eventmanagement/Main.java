@@ -6,7 +6,6 @@ import eventmanagement.ds.Search;
 import eventmanagement.ds.WaitingEntry;
 import eventmanagement.model.Attendee;
 import eventmanagement.model.Event;
-import eventmanagement.ds.WaitlistManager;
 import java.util.*;
 //testing lang buseng
 public class Main {
