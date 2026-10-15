@@ -12,13 +12,14 @@ public class WaitingEntry implements Comparable<WaitingEntry> {
     private final int priority;
     private final long order;
 
-    public WaitingEntry(Attendee attendee, int priority, long order){
+    private WaitingEntry(Attendee attendee, int priority, long order){
         this.attendee = attendee;
         this.priority = priority;
         this.order = order;
     }
 
     public Attendee getAttendee(){return attendee;}
+    public int getPriority(){return priority;}
 
     @Override
     public int compareTo(WaitingEntry other){
@@ -35,7 +36,7 @@ public class WaitingEntry implements Comparable<WaitingEntry> {
         private final PriorityQueue<WaitingEntry> waitingList = new PriorityQueue<>();
         private long nextOrder;
 
-        private WaitingEntry addAttendee(Attendee attendee, int priority){
+        public WaitingEntry addAttendee(Attendee attendee, int priority){
             Objects.requireNonNull(attendee, "Attendee is required");
             
             if (priority < 1){
