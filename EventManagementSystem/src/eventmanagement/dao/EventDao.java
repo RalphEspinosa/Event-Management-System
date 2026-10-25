@@ -78,8 +78,7 @@ public class EventDao {
                   rs.getInt("event_id"),
                   rs.getString("name"),
                   rs.getString("event_date"),
-                  rs.getInt("capacity"),
-                  rs.getString("category")
+                  rs.getString("category"), rs.getInt("capacity")
                 );
                 List<Attendee> eventAttendees = dao.getAttendeesByEvent(event.getEventId());
                 for(Attendee a: eventAttendees){
@@ -107,8 +106,7 @@ public class EventDao {
                     rs.getInt("event_id"),
                     rs.getString("name"),
                     rs.getString("event_date"),
-                    rs.getInt("capacity"),
-                    rs.getString("category")
+                    rs.getString("category"), rs.getInt("capacity")
                     );
                     
                     List <Attendee> eventAttendees = dao.getAttendeesByEvent(eventId);

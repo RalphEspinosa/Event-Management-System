@@ -18,7 +18,7 @@ public class RegistrationService {
     private AttendeeDao attendeeDao = new AttendeeDao();
     private WaitlistDao waitlistDao = new WaitlistDao();
     
-    private static final int defPriority = 5;
+    private static final int defPriority = 3;
     
     // Rebuilds this event's priority queue from the database
     private WaitingEntry.WaitlistManager loadWaitlist(int eventId){
@@ -63,8 +63,8 @@ public class RegistrationService {
         if (isAlreadyRegistered(event, attendee.getEmail())){
             return "This email is already registered for this  event";
         }
-        if(event.isFull()){
-            return "Event is full."  + addToWaitlist(attendee, defPriority);
+        if(!event.isFull()){
+           return "This event still has space. Register directly instead.";
         }
         return addToWaitlist(attendee, priority);
     }
