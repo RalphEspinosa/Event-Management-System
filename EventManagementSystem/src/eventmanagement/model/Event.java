@@ -15,7 +15,7 @@ public class Event {
     
     
      //Event constructor ☜(ﾟヮﾟ☜)
-    public Event(int eventId, String name, String date, int capacity, String category){
+    public Event(int eventId, String name, String date, String category, int capacity){
         this.eventId = eventId;
         this.name = name;
         this.date = date;
