@@ -40,6 +40,6 @@ public class Attendee {
     
     @Override
     public String toString(){
-        return name + " (" + email + ")";
+        return name + " (" + email + ") - Checked in: " + checkedIn;
     }
 }
