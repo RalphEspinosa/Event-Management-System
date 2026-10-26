@@ -15,7 +15,7 @@ import java.util.List;
 
 public class AttendeeDao {
     public void addAttendee(Attendee attendee){
-        String sql = "INSERT INTO attendees (name, email, event_id) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO attendees (name, email, event_id, checked_in) VALUES(?, ?, ?, ?)";
         
         try(Connection conn = DBConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)){
@@ -23,12 +23,32 @@ public class AttendeeDao {
             stmt.setString(1, attendee.getName());
             stmt.setString(2, attendee.getEmail());
             stmt.setInt(3, attendee.getEventId());
+            stmt.setBoolean(4, attendee.isCheckedIn());
             stmt.executeUpdate();
         }
         catch(SQLException e){
             System.out.println("Error adding attendee: " + e.getMessage());
         }
     }
+    public boolean checkInAttendee(int attendeeId){
+        return updateCheckInStatus(attendeeId, true);
+    }
+
+    public boolean updateCheckInStatus(int attendeeId, boolean checkedIn){
+        String sql = "UPDATE attendees SET checked_in = ? WHERE id = ?";
+
+        try(Connection conn = DBConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setBoolean(1, checkedIn);
+            stmt.setInt(2, attendeeId);
+            return stmt.executeUpdate() > 0;
+        }
+        catch(SQLException e){
+            System.out.println("Error updating attendee check-in status: " + e.getMessage());
+            return false;
+        }
+    }
+
     public void removeAttendee(int attendeeId){
         String sql = "DELETE FROM attendees WHERE id = ?";
 
@@ -43,7 +63,7 @@ public class AttendeeDao {
     }
     public List <Attendee> getAttendeesByEvent(int eventId){
         List<Attendee> attendees = new ArrayList<>();
-        String sql = "SELECT id, name, email, event_id FROM attendees WHERE event_id = ?";
+        String sql = "SELECT id, name, email, event_id, checked_in FROM attendees WHERE event_id = ?";
         
         try(Connection conn = DBConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);){
@@ -55,7 +75,8 @@ public class AttendeeDao {
                     rs.getInt("id"),
                     rs.getString("name"),
                     rs.getString("email"),
-                    rs.getInt("event_id")
+                    rs.getInt("event_id"),
+                    rs.getBoolean("checked_in")
                   );
                     attendees.add(a);
                 }
