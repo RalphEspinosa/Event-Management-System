@@ -14,6 +14,8 @@ import eventmanagement.model.Attendee;
 import java.awt.Font;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class UI extends JFrame /*implements ActionListener*/ {
@@ -50,6 +52,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
      private JTextArea txtReport;
      private JScrollPane reportScroll;
      private JButton btnGenerateReport;
+     private Set<Attendee> checkedInAttendees = new HashSet<>();
      
      //Declaring Event Table Columns
       Object[][] data = {};
@@ -204,6 +207,10 @@ public class UI extends JFrame /*implements ActionListener*/ {
         btnRemoveAttendee = new JButton("Remove");
         btnRemoveAttendee.setBounds(530, 480, 130, 30);
         attendeePanel.add(btnRemoveAttendee);
+        
+        btnCheckIn = new JButton("Check In");
+        btnCheckIn.setBounds(530, 520, 130, 30);
+        attendeePanel.add(btnCheckIn);
 
         btnGenerateReport = new JButton("Generate Attendance Report");
         btnGenerateReport.setBounds(5, 510, 970, 32);
@@ -471,6 +478,36 @@ public class UI extends JFrame /*implements ActionListener*/ {
                 attendeeEvent.repaint();
             }else{
                 inputError("Please select attendee first");
+         
+        
+        }else if(e.getSource() == btnRemoveAttendee){
+            Event event = (Event) attendeeEvent.getSelectedItem();
+            int indexSelected = list.getSelectedIndex();
+            if(event != null && indexSelected != -1){
+                event.getAttendees().remove(indexSelected);
+                listModel.removeElementAt(indexSelected);
+                showEvents();
+                attendeeEvent.repaint();
+            }else{
+                inputError("Please select attendee first");
+    }
+
+        }else if(e.getSource() == btnCheckIn){
+            Attendee attendee = list.getSelectedValue();
+            if(attendee == null){
+            inputError("Please select an attendee first.");
+
+        }else if(checkedInAttendees.contains(attendee)){
+            inputError("This attendee has already checked in.");
+
+    }else{
+        checkedInAttendees.add(attendee);
+
+        JOptionPane.showMessageDialog(
+            this,
+            "Attendee checked in successfully!",
+            "Check In",
+            JOptionPane.INFORMATION_MESSAGE
             }
         }*/
     }
