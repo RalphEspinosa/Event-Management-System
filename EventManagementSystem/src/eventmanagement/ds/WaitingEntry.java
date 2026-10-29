@@ -2,6 +2,7 @@ package eventmanagement.ds;
 
 import eventmanagement.model.Attendee;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.PriorityQueue;
@@ -11,13 +12,14 @@ public class WaitingEntry implements Comparable<WaitingEntry> {
     private final int priority;
     private final long order;
 
-    public WaitingEntry(Attendee attendee, int priority, long order){
+    private WaitingEntry(Attendee attendee, int priority, long order){
         this.attendee = attendee;
         this.priority = priority;
         this.order = order;
     }
 
     public Attendee getAttendee(){return attendee;}
+    public int getPriority(){return priority;}
 
     @Override
     public int compareTo(WaitingEntry other){
@@ -36,6 +38,11 @@ public class WaitingEntry implements Comparable<WaitingEntry> {
 
         public WaitingEntry addAttendee(Attendee attendee, int priority){
             Objects.requireNonNull(attendee, "Attendee is required");
+            
+            if (priority < 1){
+                throw new IllegalArgumentException("Priority must be 1 or higher");
+            }
+            
             WaitingEntry entry = new WaitingEntry(attendee, priority, nextOrder++);
             waitingList.offer(entry);
             return entry;
@@ -45,14 +52,18 @@ public class WaitingEntry implements Comparable<WaitingEntry> {
             WaitingEntry entry = waitingList.poll();
             return entry == null ? null : entry.getAttendee();
         }
-
+        
+        //peek next entry
         public WaitingEntry peekNext(){return waitingList.peek();}
-
+        
+        //Remove entry
         public boolean removeEntry(WaitingEntry entry){return waitingList.remove(entry);}
-
+        
+        
+        //Sorted copy for display
         public List<WaitingEntry> getWaitingList(){
             List<WaitingEntry> entries = new ArrayList<>(waitingList);
-            entries.sort(null);
+            Collections.sort(entries);
             return entries;
         }
 
