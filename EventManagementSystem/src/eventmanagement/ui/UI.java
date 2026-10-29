@@ -31,7 +31,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
      private JPanel eventPanel, attendeePanel, reportPanel, waitingPanel;
      private JLabel lblEventName, lblCategory, lblDate, lblSearch;
      private JTextField txtEventName, txtDate, txtCategory, txtSearch, txtWaitingName, txtWaitingEmail, txtAttendeeName, txtEmail;
-     private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnShowAll, btnJoinWaiting, btnAdmitNext, btnRemoveWaiting, btnAddAttendee, btnRemoveAttendee;
+     private JButton btnAdd, btnUpdate, btnDelete, btnSearch, btnShowAll, btnJoinWaiting, btnAdmitNext, btnRemoveWaiting, btnAddAttendee, btnRemoveAttendee,btnCheckIn;
      private JTable eventTable;
      private JScrollPane scroll;
      private JComboBox<String> searchType;
