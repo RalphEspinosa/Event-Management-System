@@ -12,7 +12,7 @@ public class WaitingEntry implements Comparable<WaitingEntry> {
     private final int priority;
     private final long order;
 
-    private WaitingEntry(Attendee attendee, int priority, long order){
+    public WaitingEntry(Attendee attendee, int priority, long order){
         this.attendee = attendee;
         this.priority = priority;
         this.order = order;
@@ -70,5 +70,13 @@ public class WaitingEntry implements Comparable<WaitingEntry> {
         public int size(){return waitingList.size();}
 
         public boolean isEmpty(){return waitingList.isEmpty();}
+
+        public void addToWaitlist(int i, WaitingEntry waitingEntry) {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        public String pollNext(int i) {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
     }
 }
