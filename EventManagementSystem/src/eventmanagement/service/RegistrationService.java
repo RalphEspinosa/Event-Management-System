@@ -20,7 +20,7 @@ public class RegistrationService {
     
     private static final int defPriority = 3;
     
-    // Rebuilds this event's priority queue from the database
+    // Rebuilds this event's priority queue from the Database
     private WaitingEntry.WaitlistManager loadWaitlist(int eventId){
         WaitingEntry.WaitlistManager manager = new WaitingEntry.WaitlistManager();
         waitlistDao.loadInto(eventId, manager);

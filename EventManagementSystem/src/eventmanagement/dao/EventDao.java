@@ -17,7 +17,7 @@ import java.util.List;
 public class EventDao {
     
     private AttendeeDao dao = new AttendeeDao();
-    //Saves a new event 
+    //Saves a new Event 
     public void addEvent(Event event){
        String sql = "INSERT INTO events (name, event_date, capacity, category) VALUES(?, ?, ?, ?)" ;
        

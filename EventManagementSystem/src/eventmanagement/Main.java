@@ -8,7 +8,7 @@ import eventmanagement.model.Event;
 import eventmanagement.model.Event;
 import eventmanagement.ds.WaitlistManager;
 
-//testing lang buseng
+//testing lang buseng nga ba
 public class Main {
     public static void main(String[] args) {
         Event sample = new Event(1, "U-Week", "2026-12-08");

@@ -512,7 +512,7 @@ public class UI extends JFrame /*implements ActionListener*/ {
         }*/
     }
 
-    //Generates the attendance report and shows it in the report scroll pane
+    //Generates the Attendance report and shows it in the report scroll panE
     private void generateReport(){
         StringBuilder sb = new StringBuilder();
         sb.append("EVENT MANAGEMENT SYSTEM - ATTENDANCE REPORT\n");

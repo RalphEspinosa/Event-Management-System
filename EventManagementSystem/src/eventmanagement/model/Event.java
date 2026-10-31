@@ -13,7 +13,7 @@ public class Event {
     private String category = "";
     private LinkedList<Attendee> attendees;
     
-     //Event constructor ☜(ﾟヮﾟ☜)
+     //Event Constructor ☜(ﾟヮﾟ☜)
     public Event(int eventId, String name, String date){
         this.eventId = eventId;
         this.name = name;
