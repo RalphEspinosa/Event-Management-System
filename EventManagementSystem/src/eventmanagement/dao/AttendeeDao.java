@@ -82,7 +82,7 @@ public class AttendeeDao {
                 }
             } 
         } catch(SQLException e){
-            System.out.println("Error loeading attendees: " + e.getMessage());
+            System.out.println("Error loading attendees: " + e.getMessage());
         }
         return attendees;
     }
