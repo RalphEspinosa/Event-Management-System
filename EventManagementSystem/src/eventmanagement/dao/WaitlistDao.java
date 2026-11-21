@@ -65,6 +65,14 @@ public class WaitlistDao {
                 System.out.println("Error loading waitlist: " + e.getMessage());
         }
     }
+    void deleteByEvent(Connection conn, int eventId) throws SQLException {
+        String sql = "DELETE FROM waitlist WHERE event_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, eventId);
+            stmt.executeUpdate();
+        }
+    }
+
     public boolean removeFromWaitlist(int eventId, String email){
         String sql = "DELETE FROM waitlist WHERE event_id = ? AND email = ?";
         try(Connection conn = DBConnection.getConnection();

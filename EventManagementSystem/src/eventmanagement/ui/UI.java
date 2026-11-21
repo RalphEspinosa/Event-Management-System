@@ -10,11 +10,13 @@ import eventmanagement.service.RegistrationService;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.LinkedList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -295,8 +297,17 @@ public class UI extends JFrame implements ActionListener, ChangeListener, ListSe
 
     //Reloads everything from the database and redraws every tab
     private void refreshAll(){
+        List<Event> events;
+        try {
+            events = eventDao.getAllEvents();
+        } catch (SQLException e) {
+            System.out.println("Error loading events: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Could not load events. Check the database connection and try again.",
+                "Database Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         linkedList.clear();
-        linkedList.addAll(eventDao.getAllEvents());
+        linkedList.addAll(events);
         showEvents();
         refreshCombos();
         showAttendees();
@@ -443,7 +454,11 @@ public class UI extends JFrame implements ActionListener, ChangeListener, ListSe
                 return;
             }
             if(e.getSource() == btnAdd){
-                eventDao.addEvent(new Event(0, name, date, category, capacity));
+                if (!eventDao.addEvent(new Event(0, name, date, category, capacity))) {
+                    JOptionPane.showMessageDialog(this, "Could not add the event.",
+                        "Database Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }else{
                 int indexSelected = eventTable.getSelectedRow();
                 if(indexSelected == -1){
@@ -475,8 +490,12 @@ public class UI extends JFrame implements ActionListener, ChangeListener, ListSe
                     "Delete this event together with its attendees and waiting list?",
                     "Confirm Delete", JOptionPane.YES_NO_OPTION);
                 if(answer == JOptionPane.YES_OPTION){
-                    eventDao.deleteEvent(event.getEventId());
-                    refreshAll();
+                    if (eventDao.deleteEvent(event.getEventId())) {
+                        refreshAll();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Could not delete the event.",
+                            "Database Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }else{
                 inputError("Please select event first");

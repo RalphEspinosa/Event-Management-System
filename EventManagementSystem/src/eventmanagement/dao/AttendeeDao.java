@@ -61,13 +61,20 @@ public class AttendeeDao {
             System.out.println("Error removing attendee: " + e.getMessage());
         }
     }
+    void deleteByEvent(Connection conn, int eventId) throws SQLException {
+        String sql = "DELETE FROM attendees WHERE event_id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, eventId);
+            stmt.executeUpdate();
+        }
+    }
+
     public List <Attendee> getAttendeesByEvent(int eventId){
         List<Attendee> attendees = new ArrayList<>();
         String sql = "SELECT id, name, email, event_id, checked_in FROM attendees WHERE event_id = ?";
-        
+
         try(Connection conn = DBConnection.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql);){
-            
             stmt.setInt(1, eventId);
             try(ResultSet rs = stmt.executeQuery()){
                 while (rs.next()){
@@ -80,7 +87,7 @@ public class AttendeeDao {
                   );
                     attendees.add(a);
                 }
-            } 
+            }
         } catch(SQLException e){
             System.out.println("Error loading attendees: " + e.getMessage());
         }
