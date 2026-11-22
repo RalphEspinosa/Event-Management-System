@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package eventmanagement.model;
 
 public class Feedback {
@@ -18,7 +15,7 @@ public class Feedback {
         this.attendeeId = attendeeId;
         this.attendeeName = attendeeName;
         this.rating = rating;
-        this.comments = comments;
+        this.comments = (comments == null) ? "" : comments;
     }
     
     public int getFeedbackId(){
@@ -42,6 +39,6 @@ public class Feedback {
     
     @Override
     public String toString(){
-        return attendeeName + ": " + rating + " /5" + (comments.isEmpty() ? "" : " - " + comments);
+        return attendeeName + ": " + rating + "/5" + (comments.isEmpty() ? "" : " - " + comments);
     }
 }
