@@ -18,24 +18,12 @@ public class Feedback {
         this.comments = (comments == null) ? "" : comments;
     }
     
-    public int getFeedbackId(){
-        return feedbackId;
-    }
-    public int getEventId(){
-        return eventId;
-    }
-    public int getAttendeeId(){
-        return attendeeId;
-    }
-    public String getAttendeeName(){
-        return attendeeName;
-    }
-    public int getRating(){
-        return rating;
-    }
-    public String getComments(){
-        return comments;
-    }
+    public int getFeedbackId(){return feedbackId;}
+    public int getEventId(){return eventId;}
+    public int getAttendeeId(){return attendeeId; }
+    public String getAttendeeName(){return attendeeName;}
+    public int getRating(){return rating;}
+    public String getComments(){return comments;}
     
     @Override
     public String toString(){
